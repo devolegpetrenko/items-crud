@@ -24,7 +24,7 @@ Instructions:
 1. Backend:
 - ✅ Set up a new .NET Core project using a tool of your choice (e.g., Visual Studio, VS Code, Rider or dotnet CLI).
 - ✅ Create the necessary API endpoints and models for managing items.
-- Implement the API endpoints for CRUD operations, including proper input validation ❌ and error handling ❌.
+- Implement the API endpoints for CRUD operations, including proper input validation ✅ and error handling ✅.
 - Configure the database connection using Entity Framework and ensure the API interacts with the database correctly.
 - ✅ Use Entity Framework with the database of your choice.
 - Add a Dockerfile for the backend and the required Database in docker-compose file ✅.
@@ -38,6 +38,6 @@ Instructions:
 
 Submission
 Once you have completed the task, please provide the following:
-- The GitHub repository link for the source code. ❌
-- Any necessary instructions for running the application locally (e.g., required packages, environment setup). ❌
-- A brief description of the key decisions you made during development, references, and any challenges you encountered. ❌
+- The GitHub repository link for the source code.
+- Any necessary instructions for running the application locally (e.g., required packages, environment setup). ✅
+- A brief description of the key decisions you made during development, references, and any challenges you encountered. ✅
