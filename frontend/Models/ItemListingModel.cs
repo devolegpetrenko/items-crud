@@ -1,4 +1,4 @@
-﻿namespace ItemsCrud.Models;
+﻿namespace frontend.Models;
 
 public class ItemListingModel
 {

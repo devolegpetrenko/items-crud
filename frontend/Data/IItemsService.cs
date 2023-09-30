@@ -1,4 +1,4 @@
-﻿using ItemsCrud.Models;
+﻿using frontend.Models;
 
 namespace frontend.Data;
 
