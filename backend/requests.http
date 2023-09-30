@@ -1,0 +1,19 @@
+@backendHostUrl = http://localhost:8001
+
+### GetAll
+
+GET {{backendHostUrl}}/api/items
+
+### AddItem
+
+POST {{backendHostUrl}}/api/items
+Content-Type: application/json
+
+{
+    "name": "{{$guid}}",
+    "stock": 24
+}
+
+### Ping
+
+GET {{backendHostUrl}}/ping
