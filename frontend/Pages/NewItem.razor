@@ -1,0 +1,67 @@
+﻿@page "/new"
+@using ItemsCrud.Models;
+@using System.Collections;
+@using frontend.Data;
+@using frontend.Exceptions;
+@using static frontend.Data.ItemsService;
+
+<PageTitle>Add item</PageTitle>
+
+<h2>add item</h2>
+
+<EditForm Model="_item" OnValidSubmit="Create" class="card card-body bg-light mt-2">
+    <DataAnnotationsValidator />
+    <div class="form-group row">
+        <label for="name" class="col-md-2 col-form-label">Name:</label>
+        <div class="col-md-10">
+            <InputText id="name" class="form-control" @bind-Value="_item.Name" />
+            <ValidationMessage For="@(() => _item.Name)" />
+        </div>
+    </div>
+    <div class="form-group row mt-2">
+        <label for="stock" class="col-md-2 col-form-label">Stock:</label>
+        <div class="col-md-10">
+            <AntDesign.InputNumber id="stock" class="form-control" @bind-Value="_item.Stock" />
+            <ValidationMessage For="@(() => _item.Stock)" />
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-10">
+            <button type="submit" class="btn btn-success">add</button>
+        </div>
+    </div>
+</EditForm>
+
+<button class="btn btn-primary mt-4" @onclick="GoToItems">go to items</button>
+
+@code {
+    [Inject]
+    IItemsService _itemsService { get; set; }
+
+    [Inject]
+    NavigationManager _navigationManager { get; set; }
+
+    [Inject]
+    IMessageService _messageService { get; set; }
+
+    ItemViewModel _item = new ItemViewModel();
+
+    private async Task Create()
+    {
+        try
+        {
+            var id = await _itemsService.AddItem(_item);
+            _navigationManager.NavigateTo($"/{id}");
+        }
+        catch (ValidationException exception)
+        {
+            var errorMessage = string.Join("\n", exception.Errors);
+            await _messageService.Error(errorMessage);
+        }
+    }
+
+    private async Task GoToItems()
+    {
+        _navigationManager.NavigateTo("/");
+    }
+}

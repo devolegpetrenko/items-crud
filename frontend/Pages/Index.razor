@@ -1,0 +1,67 @@
+﻿@page "/"
+@using ItemsCrud.Models;
+@using frontend.Data;
+
+<PageTitle>items</PageTitle>
+
+<h2>items</h2>
+
+@if (_items is null)
+{
+    <div>loading</div>
+}
+else if (_items.Count == 0)
+{
+    <div>no items</div>
+}
+else
+{
+    @foreach (var item in _items)
+    {
+        <div class="item">
+            <div class="name">@item.Name</div>
+            <button class="btn btn-primary" @onclick="() => Edit(item.Id)">edit</button>
+            <button class="btn btn-danger" @onclick="() => Remove(item.Id)">remove</button>
+        </div>
+    }
+}
+
+<button class="btn btn-primary mt-4" @onclick="Create">add item</button>
+
+@code {
+    [Inject]
+    IItemsService _itemsService { get; set; }
+
+    [Inject]
+    NavigationManager _navigationManager { get; set; }
+
+    List<ItemListingModel> _items { get; set; }
+
+    private void Create()
+    {
+        _navigationManager.NavigateTo("/new");
+    }
+
+    private void Edit(Guid id)
+    {
+        _navigationManager.NavigateTo($"/{id}");
+    }
+
+    private async Task Remove(Guid id)
+    {
+        await _itemsService.RemoveItem(id);
+        await LoadItems();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadItems();
+
+        await base.OnInitializedAsync();
+    }
+
+    async Task LoadItems()
+    {
+        _items = await _itemsService.GetAllItems();
+    }
+}

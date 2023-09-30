@@ -1,0 +1,79 @@
+﻿@page "/{id:guid}"
+@using ItemsCrud.Models;
+@using frontend.Data;
+@using frontend.Exceptions;
+@using static frontend.Data.ItemsService;
+
+<PageTitle>edit item @_itemName</PageTitle>
+
+<h2>edit item @_itemName</h2>
+
+<EditForm Model="_item" OnValidSubmit="Save" class="card card-body bg-light">
+    <DataAnnotationsValidator />
+    <div class="form-group row">
+        <label for="name" class="col-md-2 col-form-label">Name:</label>
+        <div class="col-md-10">
+            <InputText id="name" class="form-control" @bind-Value="_item.Name" />
+            <ValidationMessage For="@(() => _item.Name)" />
+        </div>
+    </div>
+    <div class="form-group row mt-2">
+        <label for="stock" class="col-md-2 col-form-label">Stock:</label>
+        <div class="col-md-10">
+            <AntDesign.InputNumber id="stock" class="form-control" @bind-Value="_item.Stock" />
+            <ValidationMessage For="@(() => _item.Stock)" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10 mt-4">
+            <button type="submit" class="btn btn-success">save</button>
+        </div>
+    </div>
+</EditForm>
+
+<button class="btn btn-primary mt-4" @onclick="GoToItems">go to items</button>
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    [Inject]
+    IItemsService _itemsService { get; set; }
+
+    [Inject]
+    NavigationManager _navigationManager { get; set; }
+
+    [Inject]
+    IMessageService _messageService { get; set; }
+
+    string _itemName { get; set; }
+
+    ItemViewModel _item = new ItemViewModel();
+
+    private async Task Save()
+    {
+        try
+        {
+            await _itemsService.UpdateItem(Id, _item);
+            _itemName = _item.Name;
+        }
+        catch (ValidationException exception)
+        {
+            var errorMessage = string.Join("\n", exception.Errors);
+            await _messageService.Error(errorMessage);
+        }
+    }
+
+    private async Task GoToItems()
+    {
+        _navigationManager.NavigateTo("/");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _item = await _itemsService.GetItem(Id);
+        _itemName = _item.Name;
+
+        await base.OnInitializedAsync();
+    }
+}
